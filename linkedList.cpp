@@ -1,118 +1,145 @@
 #include <iostream>
+#include "node.h"
 using namespace std;
 
-class Node{
-    public: 
-    int data;
-    Node *nextNode;
 
-    Node(int d){
-        data = d;
-        nextNode = NULL;
-    }
-    Node(){
-        nextNode = NULL;
-    }
-};
-// class Node{
-//     private:
-//     int data;
-//     Node *nextNode;
 
-//     public: 
-//     Node(){
-//         nextNode = NULL;
-//     }
-//     Node(int d){
-//         data = d;
-//         nextNode = NULL;
-//     }
-//     int getData(){
-//         return data;
-//     }
-//     void setData(int d){
-//         data = d;
-//     }
-//     Node* getNext(){
-//         return nextNode;
-//     }
-//     void setNext(Node* n){
-//         nextNode = n;
-//     }   
-// };
+class linkedList{
+    public:
+    Node *head = NULL;
+    Node *tail = NULL;
+    int length = 0;
 
-// Here we are using pass by reference to reflect changes on head. 
-void append(Node* *head, int data){
-    if(*head == NULL){
-        Node* node = new Node(data);
-        *head = node;
-        return;
-    }
-    Node *temp = *head;
-    while(temp->nextNode != NULL){
-        temp = temp->nextNode;
-    }
-    Node *node = new Node(data);
-    temp->nextNode = node;
-}
-
-void append2(Node* &head, int data){
-    if(head == NULL){
+    void append(int data){
         Node *nd = new Node(data);
+        if(head == NULL){
+            head = nd;
+            tail = nd;
+            length = 1;
+            return;
+        }
+        Node *temp = head;
+        while(temp->next != NULL){
+            temp = temp->next;
+        }
+        temp->next = nd;
+        tail = nd;
+        length++;
+    }
+
+    // Pushing a new element to the front.
+    void push(int data){
+        Node *nd = new Node(data);
+        if(head == NULL){
+            head = nd;
+            tail = nd;
+            length++;
+            return;
+        }
+        nd->next = head;
         head = nd;
-        return;
+        length++;
     }
-    Node *nd = new Node(data);
-    Node *temp = head;
 
-    while(temp->nextNode != NULL){
-        temp = temp->nextNode;
-    }
-    temp->nextNode = nd;
-
-}
-
-// Here we are using pointer to pointer for head, to reflect changes on head.
-void push(Node* *head, int data){
-    if(*head == NULL){
-        Node *nd = new Node(data);
-        *head = nd;
-        return;
+    // Inserting an element on the given position.
+    void insert(int pos, int data){
+        if(pos == 1){
+            push(data);
+            return;
+        }
         
-    }   
-    Node *nd = new Node(data);
-    nd->nextNode = *head;
-    *head = nd;
-}
-void push2(Node* &head, int d){
-    Node *nd = new Node(d);
-    if(head == NULL){
-        head = nd;
-        return;
+        Node *temp = head;
+        Node *newnode = new Node(data); 
+        int i = 1;
+        while(i<pos - 1){
+            temp = temp -> next;
+            i++;
+        }
+        Node *temp2 = temp -> next;
+        temp -> next = newnode;
+        newnode -> next = temp2;
+        length++;
+        if(pos == length){
+            tail = newnode;
+        }
     }
-    nd->nextNode = head;
-    head = nd;
 
-}
+    void insertAfter(int nd, int data){
+        Node *newnd = new Node(data);
+        Node *temp = head;
 
-void showList(Node* head){
-    while(head != NULL){
-        cout<<head->data<<"--> ";
-        head = head->nextNode;
+        while(temp->data != nd){
+            temp = temp->next;
+        }
+        Node *temp2 = temp->next;
+        temp -> next = newnd;
+        newnd -> next = temp2;
+        length++;
     }
+    void printList(){
+        Node *temp = head;
+        while(temp != NULL){
+            cout<<temp->data<<" --> ";
+            temp = temp->next;
+        }
+        if(temp == NULL){
+            cout<<"NULL\n";
+        }
+    }
+    void printLength(){
+        cout<<length;
+    }
+    void deleteNode(int d){
+        Node *temp = head;
+        if(temp == NULL){
+            cout<<"Linked list is empty\n";
+            length--;
+            return;
+        }
+        if(temp->data == d){
+            // if(temp ->next  )
+            Node *nxt = temp -> next;
+            delete temp;
+            head = nxt;
+            length--;
+            return; 
+        }
+
+
+        while(temp -> next != NULL){
+            if(temp -> next -> data == d){
+                Node *sec = temp->next->next;
+                delete temp -> next;
+                temp->next = sec;
+            }
+            temp = temp -> next;
+        }
+        length--;   
+    }
+
 
     
-}
+};
+
+
 
 int main(){
-    Node *head = NULL;
-    append(&head, 10);
-    append(&head,50);
-    append(&head, 1000);
-    append2(head, 89);
-    push(&head,5);
-    push2(head, 1);
-    showList(head);
+
+    linkedList l1;
+    l1.append(5);
+    l1.append(10);
+    l1.append(23);
+    l1.insert(2,1000);
+    l1.insertAfter(5,35);
+    l1.printList();
+    cout<<endl;
+    l1.printLength();
+    l1.deleteNode(5);
+    cout<<endl;
+    l1.printList();
+    cout<<endl;
+    l1.printLength();
+
 
     return 0;
 }

@@ -117,7 +117,15 @@ class linkedList{
         length--;   
     }
 
-
+    int getData(int pos){
+        Node *temp = head;
+        int i = 1;
+        while(i != pos){
+            temp = temp -> next;
+            i++;
+        }
+        return temp -> data;
+    }
     
 };
 
@@ -133,12 +141,15 @@ int main(){
     l1.insertAfter(5,35);
     l1.printList();
     cout<<endl;
-    l1.printLength();
-    l1.deleteNode(5);
-    cout<<endl;
-    l1.printList();
-    cout<<endl;
-    l1.printLength();
+    cout<<l1.getData(3);
+
+    // cout<<endl;
+    // l1.printLength();
+    // l1.deleteNode(5);
+    // cout<<endl;
+    // l1.printList();
+    // cout<<endl;
+    // l1.printLength();
 
 
     return 0;
